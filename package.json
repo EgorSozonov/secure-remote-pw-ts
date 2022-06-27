@@ -1,0 +1,15 @@
+{
+    "author": "Egor Sozonov <Egor.Sozonov.09@gmail.com>",
+    "name": "srp-ts-client",
+    "version": "1.0.0",
+    "description": "SecureRemotePassword client in Typescript",
+    "main": "bin/main.js",
+    "types": "bin/main.d.ts",
+    "repository": "https://github.com/EgorSozonov/srp-ts-client.git",
+    "scripts": {
+        "build": "tsc",
+        "prepare": "yarn run build"
+    },
+    "license": "Apache License 2.0",
+    "private": false
+}
