@@ -1,6 +1,6 @@
 
 import BI from "jsbi"
-import { SHA256 } from "crypto-js"
+import * as NodeCrypto from "crypto"
 import { base64OfHex, bigintOfBase64, hexOfArray as nonprefixedHexOfArray, hexOfBase64, hexOfBuff, nonprefixedHexOfPositiveBI, prefixedHexOfArray, prefixedHexOfBuff } from "./StringUtils"
 import { modPow, ZERO } from "./ModularArithmetic"
 
@@ -151,13 +151,22 @@ private async computeU(AHex: string, BHex: string): Promise<BI | undefined> {
     return result
 }
 
+private isBrowser(): boolean {
+    return typeof window !== "undefined" && typeof window.document !== "undefined"
+}
+
 /**
  * Random string of hex digits with a set length
  */
 private randomHex(l: number): string {
     const arr = new Uint8Array(l)
-    const result = crypto.getRandomValues(arr)
-    return prefixedHexOfArray(result);
+    if (this.isBrowser()) {
+        const result = window.crypto.getRandomValues(arr)
+        return prefixedHexOfArray(result);
+    } else {
+        const result = NodeCrypto.getRandomValues(arr)
+        return prefixedHexOfArray(result);
+    }
 }
 
 

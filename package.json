@@ -14,5 +14,8 @@
     "private": false,
     "dependencies": {
         "jsbi": "^4.3.0"
+    },
+    "devDependencies": {
+        "@types/node": "^18.0.0"
     }
 }
