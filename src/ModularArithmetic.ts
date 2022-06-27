@@ -10,10 +10,11 @@ export function abs(x: BI): BI {
 }
 
 export interface Egcd {
-  g: BI
-  x: BI
-  y: BI
+    g: BI
+    x: BI
+    y: BI
 }
+
 /**
  * An iterative implementation of the extended euclidean algorithm or extended greatest common divisor algorithm.
  * Take positive integers a, b as input, and return a triple (g, x, y), such that ax + by = g = gcd(a, b).
@@ -27,7 +28,7 @@ export interface Egcd {
  * @returns A triple (g, x, y), such that ax + by = g = gcd(a, b).
  */
 export function eGcd (a: BI, b: BI): Egcd {
-    if (BI.LE(a, ZERO) || BI.LE(b, ZERO)) throw new RangeError('a and b MUST be > 0') // a and b MUST be positive
+    if (BI.LE(a, ZERO) || BI.LE(b, ZERO)) throw new RangeError("a and b MUST be > 0") // a and b MUST be positive
 
     let x = ZERO
     let y = ONE
@@ -82,7 +83,7 @@ export function modInv (a: BI, n: BI): BI {
  * @returns The number with the smallest positive representation of x (mod N)
  */
 export function toZn (x: BI, N: BI): BI {
-    if (BI.LE(N, ZERO)) throw new RangeError('n must be > 0')
+    if (BI.LE(N, ZERO)) throw new RangeError("n must be > 0")
 
     const aZn = BI.remainder(x, N)
     return BI.LT(aZn, ZERO) ? BI.add(aZn, N) : aZn

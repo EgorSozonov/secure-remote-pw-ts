@@ -3,6 +3,7 @@
         "allowJs": false,
         "allowUnreachableCode": true,
         "forceConsistentCasingInFileNames": true,
+        "lib": [ "es2015" ],
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,

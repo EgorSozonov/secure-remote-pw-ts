@@ -1,9 +1,9 @@
 
 import BI from "jsbi"
 import { SHA256 } from "crypto-js"
-import { HEX_DIGITS } from "./Constants"
-import { arrayOfBase64, base64OfArray, base64OfHex, bigintOfBase64, hexOfArray as nonprefixedHexOfArray, hexOfBase64, hexOfBuff, nonprefixedHexOfPositiveBI, prefixedHexOfArray, prefixedHexOfBuff } from "./StringUtils"
-import { modPow, ONE, ZERO } from "./ModularArithmetic"
+import { base64OfHex, bigintOfBase64, hexOfArray as nonprefixedHexOfArray, hexOfBase64, hexOfBuff, nonprefixedHexOfPositiveBI, prefixedHexOfArray, prefixedHexOfBuff } from "./StringUtils"
+import { modPow, ZERO } from "./ModularArithmetic"
+
 
 /**
  * Implementation of client-side SRP because thinbus-srp is unuseable/not Typescript.
@@ -51,7 +51,7 @@ constructor(NStr: string, gStr: string, kHexStr: string) {
 
 /**
  * Returns a randomly-generated salt in non-prefixed hex format.
- * The length of the salt is the same as the hashing algo H
+ * The length of the salt is the same as the hashing algo H.
  */
 public async generateRandomSalt(optionalServerSalt?: string): Promise<string> {
     const serverSalt = optionalServerSalt ?? "serverSalt"
@@ -61,6 +61,9 @@ public async generateRandomSalt(optionalServerSalt?: string): Promise<string> {
     return nonprefixedHexOfArray(new Uint8Array(resultBuffer))
 }
 
+/**
+ * Returns a randomly-generated verifier for a new password.
+ */
 public async generateVerifier(saltHex: string, identity: string, password: string): Promise<BI> {
     const x = await this.generateX(saltHex, identity, password)
     this.verifier = modPow(this.g, x, this.N)
@@ -136,7 +139,6 @@ private async randomA(): Promise<BI> {
     return r
 }
 
-// Server columns: salt (64 bytes), verifier (256 bytes), b (256 bytes)
 /**
  * Compute the scrambler value "u". If it's zero, process is aborted
  */

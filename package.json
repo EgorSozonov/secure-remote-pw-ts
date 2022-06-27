@@ -11,5 +11,8 @@
         "prepare": "yarn run build"
     },
     "license": "Apache License 2.0",
-    "private": false
+    "private": false,
+    "dependencies": {
+        "jsbi": "^4.3.0"
+    }
 }

@@ -2,18 +2,6 @@ import { BASE64, HEX_DIGITS } from "./Constants";
 import BI from "jsbi"
 
 
-export function checkNonempty(strs: (string | null)[]): string[] {
-    const result: string[] = []
-    for (let s of strs) {
-        if (s !== null && s.length > 0 && s !== "undefined") {
-            result.push(s)
-        } else {
-            return []
-        }
-    }
-    return result;
-}
-
 /**
  * Converts a hex string not prefixed by "0x" to Base64
  */
@@ -55,6 +43,9 @@ function trimHexZeroes(inp: string): string {
     }
 }
 
+/**
+ * Decodes a Base64 string directly into a BigInt
+ */
 export function bigintOfBase64(inp: string): BI {
     const byteArr = arrayOfBase64(inp);
     const prefixedHex: string = "0x" + (Array.from(byteArr)
@@ -72,8 +63,8 @@ export function bigintOfHex(inp: string): BI {
 }
 
 /**
- * Outputs a string with a "0x" prefix but without necessarily an even number of bytes
- * Userful for creating BigInts from
+ * Outputs a string with a "0x" prefix and an even number of bytes
+ * Userful for creating BigInts from byte arrays.
  */
 export function prefixedHexOfArray(inp: Uint8Array): string {
     return "0x" + (Array.from(inp)
@@ -81,6 +72,9 @@ export function prefixedHexOfArray(inp: Uint8Array): string {
                 .join(""));
 }
 
+/**
+ * Encodes a byte array into a Base-64 string
+ */
 export function base64OfArray(inp: Uint8Array): string {
     const numWhole = Math.floor(inp.length/3)
     const extraBytes = inp.length - (numWhole*3)
@@ -108,6 +102,9 @@ export function base64OfArray(inp: Uint8Array): string {
     return result
 }
 
+/**
+ * Decodes a Base64 string into a byte array.
+ */
 export function arrayOfBase64(inp: string): Uint8Array {
     const paddingChars = determinePadding(inp)
     const resultLength = paddingChars == 0
@@ -161,14 +158,14 @@ function num64OfBase64(charCode: number): number {
     }
 }
 
-export function determinePadding(inp: string): number {
+function determinePadding(inp: string): number {
     let result = 0
     for (let i = inp.length - 1; i > -1 && inp[i] === '='; --i) { ++result }
     return result
 }
 
 /**
- * Convert BigInt to a hex string with the "0x" prefix.
+ * Converts BigInt to a hex string with the "0x" prefix.
  * Correctly prepends zero to get an even number of chars.
  * Because of JokeScript's deficiencies, negative BigInts are not handled correctly.
  */
@@ -181,6 +178,10 @@ export function prefixedHexOfPositiveBI(inp: BI): string {
                     : ("0x0" + str))
 }
 
+/**
+ * Returns a hex string prefixed by "0x" and with an even number of symbols
+ *
+ */
 export function prefixedHexOfBuff(inp: ArrayBuffer): string {
     return "0x" + (Array.from(new Uint8Array(inp)))
                 .map((b) => HEX_DIGITS[b >> 4] + HEX_DIGITS[b & 15])
@@ -201,11 +202,21 @@ export function nonprefixedHexOfPositiveBI(inp: BI): string {
     return (str.length % 2 === 0) ? str : (str.startsWith("0") ? str.substring(1) : ("0" + str))
 }
 
+/**
+ * "a" -> "0a"
+ * "ab" -> "ab"
+ */
+function padZeroPrefix(inp: string): string {
+    return inp.length === 1 ? "0" + inp : inp
+}
 
+/**
+ * Returns a hex string unprefixed by "0x" but with an even number of symbols.
+ */
 export function hexOfArray(inp: Uint8Array): string {
     let result = ""
     for (let i = 0; i < inp.length; ++i) {
-        result = result + inp[i].toString(16).padStart(2, "0")
+        result = result + padZeroPrefix(inp[i].toString(16))
     }
     return result
 }
